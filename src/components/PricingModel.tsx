@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface PlanFeatures {
   [key: string]: string[];
@@ -21,9 +22,8 @@ const PricingModel = () => {
 
   const unlimitedPrice = 1301;
   const extraEmployeeCost = 50;
-  const vatRate = 0.05; // 5% VAT
 
-  // Calculate price based on employees and billing period
+  // Calculate price before VAT
   const calculatePrice = (basePrice: number) => {
     let monthlyPrice;
     
@@ -34,31 +34,30 @@ const PricingModel = () => {
       monthlyPrice = basePrice + (extraEmployees * extraEmployeeCost);
     }
     
-    const totalBeforeVAT = monthlyPrice * parseInt(billingPeriod);
-    const vatAmount = totalBeforeVAT * vatRate;
-    return Math.round(totalBeforeVAT + vatAmount);
+    return monthlyPrice * parseInt(billingPeriod);
   };
 
   const getMonthlyPrice = (basePrice: number) => {
     if (selectedEmployees === 999) {
-      const monthlyTotal = basePrice + unlimitedPrice;
-      const vatAmount = monthlyTotal * vatRate;
-      return Math.round(monthlyTotal + vatAmount);
+      return basePrice + unlimitedPrice;
     }
     const extraEmployees = Math.max(0, selectedEmployees - 2);
-    const monthlyTotal = basePrice + (extraEmployees * extraEmployeeCost);
-    const vatAmount = monthlyTotal * vatRate;
-    return Math.round(monthlyTotal + vatAmount);
+    return basePrice + (extraEmployees * extraEmployeeCost);
+  };
+
+  const getTotalWithVAT = (basePrice: number) => {
+    const priceBeforeVAT = calculatePrice(basePrice);
+    return Math.round(priceBeforeVAT * 1.05);
   };
 
   const planFeatures: PlanFeatures = {
     starter: [
       'Multi-locations',
       'CRM',
-      'Conversation Hub (Email, SMS, FB Messenger, Whatsapp, Instagram)',
-      'Conversation AI (Check rates)',
-      'Voice AI (Check rates)',
-      'Integrated Email System (150 Emails/Day - Check Rates)',
+      'Conversation Hub',
+      'Conversation AI',
+      'Voice AI',
+      'Integrated Email System',
       'Email & SMS Notifications',
       'Online Calendars & Scheduling',
       'Online Payment',
@@ -85,7 +84,7 @@ const PricingModel = () => {
       'Meta Pixel Ad'
     ],
     pro: [
-      'All Starter Suit Features +',
+      '**All Starter Suit Features +**',
       'Pipelines/Opportunities',
       'Funnels',
       'Blogs',
@@ -95,37 +94,55 @@ const PricingModel = () => {
       'Communities',
       'Trigger Links',
       'Smart Chat Widget',
-      '350 Emails/Day - Check Rates'
+      '350 Emails/Day'
     ],
     elite: [
-      'All Starter Suit Features +',
-      'All Pro Suit Features +',
+      '**All Starter Suit Features +**',
+      '**All Pro Suit Features +**',
       'Google Reputation Manager',
       'Social Planner',
       'Smart Websites Builder',
       'E-Commerce',
       'Webinars',
       'Marketing Campaigns',
-      'Emil Marketing',
+      'Email Marketing',
       'Payment Links',
-      '700 Emails/Day - Check Rates'
+      '700 Emails/Day'
     ]
   };
 
+  const getFeatureDetails = (feature: string) => {
+    const details: { [key: string]: string } = {
+      'Conversation Hub': 'Email, SMS, FB Messenger, Whatsapp, Instagram',
+      'Conversation AI': 'Check rates',
+      'Voice AI': 'Check rates',
+      'Integrated Email System': '150 Emails/Day - Check Rates',
+      '350 Emails/Day': 'Check Rates',
+      '700 Emails/Day': 'Check Rates'
+    };
+    return details[feature];
+  };
+
   const employeeOptions = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 20, 999];
+  const periodOptions = [
+    { value: '1', label: '1 Month' },
+    { value: '3', label: '3 Months' },
+    { value: '6', label: '6 Months' },
+    { value: '12', label: '12 Months' }
+  ];
 
   return (
     <div className="max-w-7xl mx-auto p-6 bg-gray-50 min-h-screen font-inter">
       <div className="text-center mb-8">
-        {/* Compact Employee Selection */}
-        <div className="mb-8">
+        {/* Desktop Employee Selection */}
+        <div className="mb-8 hidden md:block">
           <div className="flex justify-center">
-            <div className="bg-white rounded-full p-1 shadow-sm border inline-flex flex-wrap gap-1">
+            <div className="bg-white rounded-[15px] p-1 shadow-sm border inline-flex flex-wrap gap-1">
               {employeeOptions.map((count) => (
                 <button
                   key={count}
                   onClick={() => setSelectedEmployees(count)}
-                  className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                  className={`px-3 py-1.5 rounded-[15px] text-sm font-medium transition-colors ${
                     selectedEmployees === count
                       ? 'text-[#F9F7FA] font-semibold'
                       : 'text-gray-600 hover:text-gray-800'
@@ -134,22 +151,56 @@ const PricingModel = () => {
                     backgroundColor: selectedEmployees === count ? '#055f47' : 'transparent'
                   }}
                 >
-                  {count === 999 ? 'No limits' : count === 2 ? 'Up to 2' : count}
+                  {count === 999 ? 'Unlimited' : count === 2 ? 'Up to 2' : count}
                 </button>
               ))}
             </div>
           </div>
         </div>
 
-        {/* Billing Period Tabs */}
-        <Tabs value={billingPeriod} onValueChange={setBillingPeriod} className="mb-8">
-          <TabsList className="grid w-full max-w-md mx-auto grid-cols-4">
-            <TabsTrigger value="1">1 Month</TabsTrigger>
-            <TabsTrigger value="3">3 Months</TabsTrigger>
-            <TabsTrigger value="6">6 Months</TabsTrigger>
-            <TabsTrigger value="12">12 Months</TabsTrigger>
-          </TabsList>
-        </Tabs>
+        {/* Mobile Employee Selection */}
+        <div className="mb-4 md:hidden">
+          <Select value={selectedEmployees.toString()} onValueChange={(value) => setSelectedEmployees(parseInt(value))}>
+            <SelectTrigger className="w-full max-w-xs mx-auto">
+              <SelectValue placeholder="Select employees" />
+            </SelectTrigger>
+            <SelectContent>
+              {employeeOptions.map((count) => (
+                <SelectItem key={count} value={count.toString()}>
+                  {count === 999 ? 'Unlimited' : count === 2 ? 'Up to 2' : count.toString()}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Desktop Billing Period Tabs */}
+        <div className="hidden md:block">
+          <Tabs value={billingPeriod} onValueChange={setBillingPeriod} className="mb-8">
+            <TabsList className="grid w-full max-w-md mx-auto grid-cols-4 bg-white rounded-[15px] p-1 shadow-sm border">
+              <TabsTrigger value="1" className="rounded-[15px]">1 Month</TabsTrigger>
+              <TabsTrigger value="3" className="rounded-[15px]">3 Months</TabsTrigger>
+              <TabsTrigger value="6" className="rounded-[15px]">6 Months</TabsTrigger>
+              <TabsTrigger value="12" className="rounded-[15px]">12 Months</TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </div>
+
+        {/* Mobile Billing Period Select */}
+        <div className="mb-8 md:hidden">
+          <Select value={billingPeriod} onValueChange={setBillingPeriod}>
+            <SelectTrigger className="w-full max-w-xs mx-auto">
+              <SelectValue placeholder="Select billing period" />
+            </SelectTrigger>
+            <SelectContent>
+              {periodOptions.map((period) => (
+                <SelectItem key={period.value} value={period.value}>
+                  {period.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       {/* Pricing Cards */}
@@ -170,31 +221,52 @@ const PricingModel = () => {
               )}
             </div>
             <p className="text-gray-600">
-              {billingPeriod === '1' ? 'per month' : `for ${billingPeriod} months`}
+              {billingPeriod === '1' ? 'Per Month' : `for ${billingPeriod} months`}
+            </p>
+            <p className="text-sm text-gray-500 mt-1">
+              + 5% VAT (total = {getTotalWithVAT(basePrices.starter).toLocaleString()} AED)
             </p>
           </div>
           
           <div className="space-y-3 mb-6">
             {planFeatures.starter.slice(0, 8).map((feature, index) => (
-              <div key={index} className="flex items-start">
-                <span className="text-green-500 mr-2">✓</span>
-                <span className="text-sm text-gray-700">{feature}</span>
+              <div key={index}>
+                <div className="flex items-start">
+                  <span className="text-green-500 mr-2">✓</span>
+                  <span className="text-sm text-gray-700">{feature}</span>
+                </div>
+                {getFeatureDetails(feature) && (
+                  <div className="ml-6 mt-1">
+                    <a href="#" className="text-xs" style={{ color: '#055f47' }}>
+                      {getFeatureDetails(feature)}
+                    </a>
+                  </div>
+                )}
               </div>
             ))}
             <details className="cursor-pointer">
               <summary style={{ color: '#055f47' }} className="text-sm font-medium">Show all features</summary>
               <div className="mt-3 space-y-2">
                 {planFeatures.starter.slice(8).map((feature, index) => (
-                  <div key={index} className="flex items-start">
-                    <span className="text-green-500 mr-2">✓</span>
-                    <span className="text-sm text-gray-700">{feature}</span>
+                  <div key={index}>
+                    <div className="flex items-start">
+                      <span className="text-green-500 mr-2">✓</span>
+                      <span className="text-sm text-gray-700">{feature}</span>
+                    </div>
+                    {getFeatureDetails(feature) && (
+                      <div className="ml-6 mt-1">
+                        <a href="#" className="text-xs" style={{ color: '#055f47' }}>
+                          {getFeatureDetails(feature)}
+                        </a>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
             </details>
           </div>
           
-          <Button className="w-full" size="lg">
+          <Button className="w-full bg-black hover:bg-[#055f47] text-white" size="lg">
             Get Started
           </Button>
         </div>
@@ -215,20 +287,34 @@ const PricingModel = () => {
               )}
             </div>
             <p className="text-gray-600">
-              {billingPeriod === '1' ? 'per month' : `for ${billingPeriod} months`}
+              {billingPeriod === '1' ? 'Per Month' : `for ${billingPeriod} months`}
+            </p>
+            <p className="text-sm text-gray-500 mt-1">
+              + 5% VAT (total = {getTotalWithVAT(basePrices.pro).toLocaleString()} AED)
             </p>
           </div>
           
           <div className="space-y-3 mb-6">
             {planFeatures.pro.map((feature, index) => (
-              <div key={index} className="flex items-start">
-                <span className="text-green-500 mr-2">✓</span>
-                <span className="text-sm text-gray-700">{feature}</span>
+              <div key={index}>
+                <div className="flex items-start">
+                  <span className="text-green-500 mr-2">✓</span>
+                  <span className={`text-sm text-gray-700 ${feature.includes('**') ? 'font-bold' : ''}`}>
+                    {feature.replace(/\*\*/g, '')}
+                  </span>
+                </div>
+                {getFeatureDetails(feature) && (
+                  <div className="ml-6 mt-1">
+                    <a href="#" className="text-xs" style={{ color: '#055f47' }}>
+                      {getFeatureDetails(feature)}
+                    </a>
+                  </div>
+                )}
               </div>
             ))}
           </div>
           
-          <Button className="w-full" size="lg">
+          <Button className="w-full bg-black hover:bg-[#055f47] text-white" size="lg">
             Get Started
           </Button>
         </div>
@@ -252,36 +338,37 @@ const PricingModel = () => {
               )}
             </div>
             <p className="text-gray-600">
-              {billingPeriod === '1' ? 'per month' : `for ${billingPeriod} months`}
+              {billingPeriod === '1' ? 'Per Month' : `for ${billingPeriod} months`}
+            </p>
+            <p className="text-sm text-gray-500 mt-1">
+              + 5% VAT (total = {getTotalWithVAT(basePrices.elite).toLocaleString()} AED)
             </p>
           </div>
           
           <div className="space-y-3 mb-6">
             {planFeatures.elite.map((feature, index) => (
-              <div key={index} className="flex items-start">
-                <span className="text-green-500 mr-2">✓</span>
-                <span className="text-sm text-gray-700">{feature}</span>
+              <div key={index}>
+                <div className="flex items-start">
+                  <span className="text-green-500 mr-2">✓</span>
+                  <span className={`text-sm text-gray-700 ${feature.includes('**') ? 'font-bold' : ''}`}>
+                    {feature.replace(/\*\*/g, '')}
+                  </span>
+                </div>
+                {getFeatureDetails(feature) && (
+                  <div className="ml-6 mt-1">
+                    <a href="#" className="text-xs" style={{ color: '#055f47' }}>
+                      {getFeatureDetails(feature)}
+                    </a>
+                  </div>
+                )}
               </div>
             ))}
           </div>
           
-          <Button className="w-full" size="lg">
+          <Button className="w-full bg-black hover:bg-[#055f47] text-white" size="lg">
             Get Started
           </Button>
         </div>
-      </div>
-
-      {/* Additional Info */}
-      <div className="text-center mt-8 p-4 bg-blue-50 rounded-lg max-w-4xl mx-auto">
-        <h4 className="font-semibold text-gray-900 mb-2">Pricing Summary (including 5% VAT)</h4>
-        <p className="text-sm text-gray-600">
-          {selectedEmployees === 999 
-            ? `Unlimited employees plan with VAT included`
-            : selectedEmployees <= 2 
-              ? `${selectedEmployees} employees included at base price + VAT`
-              : `${selectedEmployees} employees: ${selectedEmployees - 2} extra × 50 AED + base price + VAT`
-          }
-        </p>
       </div>
     </div>
   );
