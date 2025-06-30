@@ -1,0 +1,322 @@
+
+/* Pricing Component Styles for HTML Embed */
+.pricing-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+  background-color: #f9fafb;
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+}
+
+.pricing-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.duration-section {
+  margin-top: 32px;
+}
+
+.duration-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 16px;
+}
+
+/* Employee Selection Styles */
+.employee-selector-desktop {
+  margin-bottom: 32px;
+}
+
+.employee-selector-mobile {
+  margin-bottom: 16px;
+  display: none;
+}
+
+.employee-buttons-container {
+  display: flex;
+  justify-content: center;
+}
+
+.employee-buttons {
+  background-color: white;
+  border-radius: 15px;
+  padding: 4px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.employee-btn {
+  padding: 6px 12px;
+  border-radius: 15px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+  border: none;
+  background: transparent;
+  color: #6b7280;
+  cursor: pointer;
+}
+
+.employee-btn:hover {
+  background-color: #055f47;
+  color: #F9F7FA;
+}
+
+.employee-btn-selected {
+  background-color: #055f47 !important;
+  color: #F9F7FA !important;
+  font-weight: 600;
+}
+
+/* Billing Period Styles */
+.billing-period-desktop .period-tabs {
+  margin-bottom: 32px;
+}
+
+.billing-period-mobile {
+  margin-bottom: 32px;
+  display: none;
+}
+
+.period-tabs-list {
+  display: grid;
+  width: 100%;
+  max-width: 384px;
+  margin: 0 auto;
+  grid-template-columns: repeat(4, 1fr);
+  background-color: white;
+  border-radius: 15px;
+  padding: 4px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+}
+
+.period-tab {
+  border-radius: 15px;
+  transition: all 0.2s;
+}
+
+.period-tab:hover {
+  background-color: #055f47;
+  color: #F9F7FA;
+}
+
+.period-tab[data-state="active"] {
+  background-color: #055f47;
+  color: #F9F7FA;
+}
+
+/* Pricing Cards */
+.pricing-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.pricing-card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  border: 1px solid #e5e7eb;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.pricing-card-popular {
+  border: 2px solid #055f47;
+}
+
+.popular-badge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #055f47;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.card-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.plan-name {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 8px;
+}
+
+.price-section {
+  margin-bottom: 8px;
+}
+
+.price-amount {
+  font-size: 36px;
+  font-weight: 700;
+  color: #055f47;
+}
+
+.currency {
+  color: #6b7280;
+}
+
+.monthly-price {
+  font-size: 14px;
+  color: #6b7280;
+  margin-top: 4px;
+}
+
+.vat-info {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 4px;
+}
+
+.billing-period {
+  color: #6b7280;
+  margin: 0;
+}
+
+/* Features */
+.features-list {
+  flex-grow: 1;
+  margin-bottom: 24px;
+}
+
+.feature-item {
+  margin-bottom: 8px;
+}
+
+.feature-main {
+  display: flex;
+  align-items: flex-start;
+}
+
+.checkmark {
+  color: #10b981;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.feature-text {
+  font-size: 14px;
+  color: #374151;
+}
+
+.feature-bold {
+  font-weight: 700;
+}
+
+.feature-details {
+  margin-left: 24px;
+  margin-top: 2px;
+}
+
+.feature-link {
+  font-size: 12px;
+  color: #055f47;
+  text-decoration: none;
+}
+
+.feature-link:hover {
+  text-decoration: underline;
+}
+
+.show-more {
+  cursor: pointer;
+}
+
+.show-more-summary {
+  color: #055f47;
+  font-size: 14px;
+  font-weight: 500;
+  list-style: none;
+}
+
+.additional-features {
+  margin-top: 12px;
+}
+
+/* Get Started Button */
+.get-started-btn {
+  width: 100%;
+  background-color: black;
+  color: white;
+  padding: 12px 32px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: auto;
+}
+
+.get-started-btn:hover {
+  background-color: #055f47;
+}
+
+/* Mobile Styles */
+@media (max-width: 480px) {
+  .pricing-container {
+    padding: 16px;
+  }
+  
+  .employee-selector-desktop {
+    display: none;
+  }
+  
+  .employee-selector-mobile {
+    display: block;
+  }
+  
+  .billing-period-desktop {
+    display: none;
+  }
+  
+  .billing-period-mobile {
+    display: block;
+  }
+  
+  .employee-select,
+  .period-select {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+  
+  .pricing-cards {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  
+  .duration-title {
+    font-size: 20px;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .pricing-cards {
+    grid-template-columns: 1fr;
+  }
+  
+  .employee-buttons {
+    flex-wrap: wrap;
+    max-width: 100%;
+  }
+}

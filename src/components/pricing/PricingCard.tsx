@@ -21,45 +21,43 @@ const PricingCard = ({ planName, planKey, basePrice, selectedEmployees, billingP
   const features = planFeatures[planKey];
 
   return (
-    <div className={`bg-white rounded-lg shadow-lg p-6 border${isPopular ? '-2' : ''} relative`} 
-         style={isPopular ? { borderColor: '#055f47' } : {}}>
+    <div className={`pricing-card ${isPopular ? 'pricing-card-popular' : ''}`}>
       {isPopular && (
-        <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 text-white" 
-               style={{ backgroundColor: '#055f47' }}>
+        <Badge className="popular-badge">
           Most Popular
         </Badge>
       )}
       
-      <div className="text-center mb-6">
-        <h3 className="text-2xl font-bold text-gray-900 mb-2">{planName}</h3>
-        <div className="mb-4">
-          <span className="text-4xl font-bold" style={{ color: '#055f47' }}>
+      <div className="card-header">
+        <h3 className="plan-name">{planName}</h3>
+        <div className="price-section">
+          <span className="price-amount">
             {price.toLocaleString()}
           </span>
-          <span className="text-gray-600"> AED</span>
+          <span className="currency"> AED</span>
           {parseInt(billingPeriod) > 1 && (
-            <div className="text-sm text-gray-500 mt-1">
+            <div className="monthly-price">
               {monthlyPrice} AED/month
             </div>
           )}
         </div>
-        <p className="text-gray-600">
-          {billingPeriod === '1' ? 'Per Month' : `for ${billingPeriod} months`}
-        </p>
-        <p className="text-sm text-gray-500 mt-1">
+        <p className="vat-info">
           + 5% VAT (total = {totalWithVAT.toLocaleString()} AED)
+        </p>
+        <p className="billing-period">
+          Per Month
         </p>
       </div>
       
-      <div className="space-y-3 mb-6">
+      <div className="features-list">
         {planKey === 'starter' ? (
           <>
             {features.slice(0, 8).map((feature, index) => (
               <FeatureItem key={index} feature={feature} />
             ))}
-            <details className="cursor-pointer">
-              <summary style={{ color: '#055f47' }} className="text-sm font-medium">Show all features</summary>
-              <div className="mt-3 space-y-2">
+            <details className="show-more">
+              <summary className="show-more-summary">Show all features</summary>
+              <div className="additional-features">
                 {features.slice(8).map((feature, index) => (
                   <FeatureItem key={index} feature={feature} />
                 ))}
@@ -73,7 +71,7 @@ const PricingCard = ({ planName, planKey, basePrice, selectedEmployees, billingP
         )}
       </div>
       
-      <Button className="w-full bg-black hover:bg-[#055f47] text-white" size="lg">
+      <Button className="get-started-btn">
         Get Started
       </Button>
     </div>
@@ -84,16 +82,16 @@ const FeatureItem = ({ feature }: { feature: string }) => {
   const details = getFeatureDetails(feature);
   
   return (
-    <div>
-      <div className="flex items-start">
-        <span className="text-green-500 mr-2">✓</span>
-        <span className={`text-sm text-gray-700 ${feature.includes('**') ? 'font-bold' : ''}`}>
+    <div className="feature-item">
+      <div className="feature-main">
+        <span className="checkmark">✓</span>
+        <span className={`feature-text ${feature.includes('**') ? 'feature-bold' : ''}`}>
           {feature.replace(/\*\*/g, '')}
         </span>
       </div>
       {details && (
-        <div className="ml-6 mt-1">
-          <a href="#" className="text-xs" style={{ color: '#055f47' }}>
+        <div className="feature-details">
+          <a href="#" className="feature-link">
             {details}
           </a>
         </div>

@@ -10,21 +10,23 @@ const PricingModel = () => {
   const [billingPeriod, setBillingPeriod] = useState('1');
 
   return (
-    <div className="max-w-7xl mx-auto p-6 bg-gray-50 min-h-screen font-inter">
-      <div className="text-center mb-8">
+    <div className="pricing-container">
+      <div className="pricing-header">
         <EmployeeSelector 
           selectedEmployees={selectedEmployees}
           onEmployeeChange={setSelectedEmployees}
         />
         
-        <BillingPeriodSelector 
-          billingPeriod={billingPeriod}
-          onPeriodChange={setBillingPeriod}
-        />
+        <div className="duration-section">
+          <h3 className="duration-title">Choose Your Perfect Plan Duration</h3>
+          <BillingPeriodSelector 
+            billingPeriod={billingPeriod}
+            onPeriodChange={setBillingPeriod}
+          />
+        </div>
       </div>
 
-      {/* Pricing Cards */}
-      <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+      <div className="pricing-cards">
         <PricingCard
           planName="Starter Suit"
           planKey="starter"

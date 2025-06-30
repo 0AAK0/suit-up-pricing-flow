@@ -12,22 +12,20 @@ interface BillingPeriodSelectorProps {
 const BillingPeriodSelector = ({ billingPeriod, onPeriodChange }: BillingPeriodSelectorProps) => {
   return (
     <>
-      {/* Desktop Billing Period Tabs */}
-      <div className="hidden md:block">
-        <Tabs value={billingPeriod} onValueChange={onPeriodChange} className="mb-8">
-          <TabsList className="grid w-full max-w-md mx-auto grid-cols-4 bg-white rounded-[15px] p-1 shadow-sm border">
-            <TabsTrigger value="1" className="rounded-[15px]">1 Month</TabsTrigger>
-            <TabsTrigger value="3" className="rounded-[15px]">3 Months</TabsTrigger>
-            <TabsTrigger value="6" className="rounded-[15px]">6 Months</TabsTrigger>
-            <TabsTrigger value="12" className="rounded-[15px]">12 Months</TabsTrigger>
+      <div className="billing-period-desktop">
+        <Tabs value={billingPeriod} onValueChange={onPeriodChange} className="period-tabs">
+          <TabsList className="period-tabs-list">
+            <TabsTrigger value="1" className="period-tab">1 Month</TabsTrigger>
+            <TabsTrigger value="3" className="period-tab">3 Months</TabsTrigger>
+            <TabsTrigger value="6" className="period-tab">6 Months</TabsTrigger>
+            <TabsTrigger value="12" className="period-tab">12 Months</TabsTrigger>
           </TabsList>
         </Tabs>
       </div>
 
-      {/* Mobile Billing Period Select */}
-      <div className="mb-8 md:hidden">
+      <div className="billing-period-mobile">
         <Select value={billingPeriod} onValueChange={onPeriodChange}>
-          <SelectTrigger className="w-full max-w-xs mx-auto">
+          <SelectTrigger className="period-select">
             <SelectValue placeholder="Select billing period" />
           </SelectTrigger>
           <SelectContent>

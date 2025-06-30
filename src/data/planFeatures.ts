@@ -10,7 +10,7 @@ export const planFeatures: PlanFeatures = {
     'Voice AI',
     'Integrated Email System',
     'Email & SMS Notifications',
-    'Online Calendars & Scheduling',
+    'Online Scheduling',
     'Online Payment',
     'Workflow Automation',
     'Invoicing & Estimates',
@@ -44,8 +44,7 @@ export const planFeatures: PlanFeatures = {
     'Certificates',
     'Communities',
     'Trigger Links',
-    'Smart Chat Widget',
-    '350 Emails/Day'
+    'Smart Chat Widget'
   ],
   elite: [
     '**All Starter Suit Features +**',
@@ -57,19 +56,15 @@ export const planFeatures: PlanFeatures = {
     'Webinars',
     'Marketing Campaigns',
     'Email Marketing',
-    'Payment Links',
-    '700 Emails/Day'
+    'Payment Links'
   ]
 };
 
 export const getFeatureDetails = (feature: string) => {
   const details: { [key: string]: string } = {
-    'Conversation Hub': 'Email, SMS, FB Messenger, Whatsapp, Instagram',
-    'Conversation AI': 'Check rates',
-    'Voice AI': 'Check rates',
-    'Integrated Email System': '150 Emails/Day - Check rates',
-    '350 Emails/Day': 'Check rates',
-    '700 Emails/Day': 'Check rates'
+    'Conversation AI': 'Check rates & limits',
+    'Voice AI': 'Check rates & limits',
+    'Integrated Email System': 'Check rates & limits'
   };
   return details[feature];
 };
