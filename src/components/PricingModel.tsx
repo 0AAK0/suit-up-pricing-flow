@@ -15,30 +15,40 @@ const PricingModel = () => {
   // Base prices per month in AED
   const basePrices = {
     starter: 99,
-    pro: 139,
-    elite: 169
+    pro: 149,
+    elite: 179
   };
 
   const unlimitedPrice = 1301;
   const extraEmployeeCost = 50;
+  const vatRate = 0.05; // 5% VAT
 
   // Calculate price based on employees and billing period
   const calculatePrice = (basePrice: number) => {
+    let monthlyPrice;
+    
     if (selectedEmployees === 999) { // unlimited
-      return billingPeriod === '1' ? unlimitedPrice : unlimitedPrice * parseInt(billingPeriod);
+      monthlyPrice = basePrice + unlimitedPrice;
+    } else {
+      const extraEmployees = Math.max(0, selectedEmployees - 2);
+      monthlyPrice = basePrice + (extraEmployees * extraEmployeeCost);
     }
     
-    const extraEmployees = Math.max(0, selectedEmployees - 2);
-    const monthlyPrice = basePrice + (extraEmployees * extraEmployeeCost);
-    return monthlyPrice * parseInt(billingPeriod);
+    const totalBeforeVAT = monthlyPrice * parseInt(billingPeriod);
+    const vatAmount = totalBeforeVAT * vatRate;
+    return Math.round(totalBeforeVAT + vatAmount);
   };
 
   const getMonthlyPrice = (basePrice: number) => {
     if (selectedEmployees === 999) {
-      return unlimitedPrice;
+      const monthlyTotal = basePrice + unlimitedPrice;
+      const vatAmount = monthlyTotal * vatRate;
+      return Math.round(monthlyTotal + vatAmount);
     }
     const extraEmployees = Math.max(0, selectedEmployees - 2);
-    return basePrice + (extraEmployees * extraEmployeeCost);
+    const monthlyTotal = basePrice + (extraEmployees * extraEmployeeCost);
+    const vatAmount = monthlyTotal * vatRate;
+    return Math.round(monthlyTotal + vatAmount);
   };
 
   const planFeatures: PlanFeatures = {
@@ -105,33 +115,30 @@ const PricingModel = () => {
   const employeeOptions = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 20, 999];
 
   return (
-    <div className="max-w-7xl mx-auto p-6 bg-gray-50 min-h-screen">
+    <div className="max-w-7xl mx-auto p-6 bg-gray-50 min-h-screen font-inter">
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">
-          Choose Your Perfect Suit Plan
-        </h1>
-        <p className="text-gray-600 mb-8">
-          All prices are in AED. Each plan includes 2 employees by default.
-        </p>
-        
-        {/* Employee Selection */}
+        {/* Compact Employee Selection */}
         <div className="mb-8">
-          <h2 className="text-xl font-semibold mb-4">How many employees do you have?</h2>
-          <div className="flex flex-wrap justify-center gap-2 mb-4">
-            {employeeOptions.map((count) => (
-              <Button
-                key={count}
-                variant={selectedEmployees === count ? "default" : "outline"}
-                onClick={() => setSelectedEmployees(count)}
-                className="min-w-[60px]"
-              >
-                {count === 999 ? 'Unlimited' : count === 2 ? 'Up to 2' : count}
-              </Button>
-            ))}
+          <div className="flex justify-center">
+            <div className="bg-white rounded-full p-1 shadow-sm border inline-flex flex-wrap gap-1">
+              {employeeOptions.map((count) => (
+                <button
+                  key={count}
+                  onClick={() => setSelectedEmployees(count)}
+                  className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                    selectedEmployees === count
+                      ? 'text-[#F9F7FA] font-semibold'
+                      : 'text-gray-600 hover:text-gray-800'
+                  }`}
+                  style={{
+                    backgroundColor: selectedEmployees === count ? '#055f47' : 'transparent'
+                  }}
+                >
+                  {count === 999 ? 'No limits' : count === 2 ? 'Up to 2' : count}
+                </button>
+              ))}
+            </div>
           </div>
-          <p className="text-sm text-gray-600">
-            Extra employees cost 50 AED per month each (beyond the included 2 employees)
-          </p>
         </div>
 
         {/* Billing Period Tabs */}
@@ -152,7 +159,7 @@ const PricingModel = () => {
           <div className="text-center mb-6">
             <h3 className="text-2xl font-bold text-gray-900 mb-2">Starter Suit</h3>
             <div className="mb-4">
-              <span className="text-4xl font-bold text-blue-600">
+              <span className="text-4xl font-bold" style={{ color: '#055f47' }}>
                 {calculatePrice(basePrices.starter).toLocaleString()}
               </span>
               <span className="text-gray-600"> AED</span>
@@ -175,7 +182,7 @@ const PricingModel = () => {
               </div>
             ))}
             <details className="cursor-pointer">
-              <summary className="text-blue-600 text-sm font-medium">Show all features</summary>
+              <summary style={{ color: '#055f47' }} className="text-sm font-medium">Show all features</summary>
               <div className="mt-3 space-y-2">
                 {planFeatures.starter.slice(8).map((feature, index) => (
                   <div key={index} className="flex items-start">
@@ -193,14 +200,11 @@ const PricingModel = () => {
         </div>
 
         {/* Pro Suit */}
-        <div className="bg-white rounded-lg shadow-lg p-6 border-2 border-yellow-400 relative">
-          <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-yellow-400 text-black">
-            Most Popular
-          </Badge>
+        <div className="bg-white rounded-lg shadow-lg p-6 border">
           <div className="text-center mb-6">
             <h3 className="text-2xl font-bold text-gray-900 mb-2">Pro Suit</h3>
             <div className="mb-4">
-              <span className="text-4xl font-bold text-blue-600">
+              <span className="text-4xl font-bold" style={{ color: '#055f47' }}>
                 {calculatePrice(basePrices.pro).toLocaleString()}
               </span>
               <span className="text-gray-600"> AED</span>
@@ -230,11 +234,14 @@ const PricingModel = () => {
         </div>
 
         {/* Elite Suit */}
-        <div className="bg-white rounded-lg shadow-lg p-6 border">
+        <div className="bg-white rounded-lg shadow-lg p-6 border-2 relative" style={{ borderColor: '#055f47' }}>
+          <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 text-white" style={{ backgroundColor: '#055f47' }}>
+            Most Popular
+          </Badge>
           <div className="text-center mb-6">
             <h3 className="text-2xl font-bold text-gray-900 mb-2">Elite Suit</h3>
             <div className="mb-4">
-              <span className="text-4xl font-bold text-blue-600">
+              <span className="text-4xl font-bold" style={{ color: '#055f47' }}>
                 {calculatePrice(basePrices.elite).toLocaleString()}
               </span>
               <span className="text-gray-600"> AED</span>
@@ -266,13 +273,13 @@ const PricingModel = () => {
 
       {/* Additional Info */}
       <div className="text-center mt-8 p-4 bg-blue-50 rounded-lg max-w-4xl mx-auto">
-        <h4 className="font-semibold text-gray-900 mb-2">Pricing Summary</h4>
+        <h4 className="font-semibold text-gray-900 mb-2">Pricing Summary (including 5% VAT)</h4>
         <p className="text-sm text-gray-600">
           {selectedEmployees === 999 
-            ? `Unlimited employees: 1,301 AED per month for any plan`
+            ? `Unlimited employees plan with VAT included`
             : selectedEmployees <= 2 
-              ? `${selectedEmployees} employees included at no extra cost`
-              : `${selectedEmployees} employees: ${selectedEmployees - 2} extra × 50 AED = ${(selectedEmployees - 2) * 50} AED additional per month`
+              ? `${selectedEmployees} employees included at base price + VAT`
+              : `${selectedEmployees} employees: ${selectedEmployees - 2} extra × 50 AED + base price + VAT`
           }
         </p>
       </div>
